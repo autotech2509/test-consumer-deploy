@@ -1,15 +1,16 @@
 from http.server import BaseHTTPRequestHandler
 import threading
-from os.path import join
+from os.path import join, dirname, abspath
 
 from confluent_kafka import Consumer
 import json
 import ccloud_lib
+dir = dirname(abspath(__file__))
 
 
 def start_consumer():
     print("enter consumer success")
-    conf = ccloud_lib.read_ccloud_config(join('config', 'python.config'))
+    conf = ccloud_lib.read_ccloud_config(join(dir, '..', 'config', 'python.config'))
     consumer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
     consumer_conf['group.id'] = 'python_example_group_1'
     consumer_conf['auto.offset.reset'] = 'earliest'
@@ -64,4 +65,4 @@ class handler(BaseHTTPRequestHandler):
 
 
 if __name__ == '__main__':
-    pass
+    start_consumer()
