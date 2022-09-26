@@ -10,11 +10,17 @@ dir = dirname(abspath(__file__))
 
 def start_consumer():
     print("enter consumer success")
-    conf = ccloud_lib.read_ccloud_config(join(dir, '..', 'config', 'python.config'))
-    consumer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
-    consumer_conf['group.id'] = 'python_example_group_1'
-    consumer_conf['auto.offset.reset'] = 'earliest'
-    consumer = Consumer(consumer_conf)
+    consumer = None
+
+    try:
+        conf = ccloud_lib.read_ccloud_config(join(dir, '..', 'config', 'python.config'))
+        consumer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
+        consumer_conf['group.id'] = 'python_example_group_1'
+        consumer_conf['auto.offset.reset'] = 'earliest'
+        consumer = Consumer(consumer_conf)
+    except Exception as er:
+        print("{}".format(er))
+        return
 
     print("Constructor consumer success")
 
@@ -59,7 +65,8 @@ class handler(BaseHTTPRequestHandler):
         self.send_response(200, message="oke")
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
-        start_consumer()
+        x = threading.Thread(target=start_consumer)
+        x.start()
         return
 
 
