@@ -59,8 +59,7 @@ class handler(BaseHTTPRequestHandler):
         self.send_response(200, message="oke")
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
-        x = threading.Thread(target=start_consumer)
-        x.start()
+        start_consumer()
         return
 
 
