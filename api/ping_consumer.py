@@ -8,11 +8,14 @@ import ccloud_lib
 
 
 def start_consumer():
+    print("enter consumer success")
     conf = ccloud_lib.read_ccloud_config(join('config', 'python.config'))
     consumer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
     consumer_conf['group.id'] = 'python_example_group_1'
     consumer_conf['auto.offset.reset'] = 'earliest'
     consumer = Consumer(consumer_conf)
+
+    print("Constructor consumer success")
 
     # Subscribe to topic
     consumer.subscribe(['test1'])
@@ -42,9 +45,10 @@ def start_consumer():
                       and updated total count to {}"
                       .format(record_key, record_value, total_count))
     except KeyboardInterrupt:
-        pass
+        print("consumer stop by key")
     finally:
         # Leave group and commit final offsets
+        print("consumer close")
         consumer.close()
 
 
